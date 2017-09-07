@@ -53,7 +53,7 @@ public class TagsController {
     }
 
     @GET
-    //@Produces(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
     public List<ReceiptResponse> getReceiptsWithTag(@PathParam("tag") String tagName) {
         // get the list of receipt objects with this tag.
 //        return tags.getReceiptIDsForThisTag(tagName);
