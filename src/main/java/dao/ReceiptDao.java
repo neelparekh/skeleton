@@ -31,11 +31,19 @@ public class ReceiptDao {
         return receiptsRecord.getId();
     }
 
-    public List<ReceiptsRecord> get(List<Integer> receiptIDs) {
+    public List<ReceiptsRecord> getMultipleReceiptsRecords(List<Integer> receiptIDs) {
         // SELECT * From RECEIPTS WHERE ID IN receiptIDs
         return dsl.selectFrom(RECEIPTS)
                 .where(RECEIPTS.ID.in(receiptIDs))
                 .fetch();
+
+    }
+
+    public ReceiptsRecord getSingleReceiptsRecord(int receiptID) {
+        // SELECT * From RECEIPTS WHERE ID IN receiptIDs
+        return dsl.selectFrom(RECEIPTS)
+                .where(RECEIPTS.ID.in(receiptID))
+                .fetchOne();
 
     }
 

@@ -22,41 +22,51 @@ public class TagDao {
         this.dsl = DSL.using(jooqConfig);
     }
 
-    public int insert(String tagName, int receiptID) {
-        TagsRecord tagsRecord = dsl
-                .insertInto(TAGS, TAGS.TAG_NAME, TAGS.RECEIPT_ID)
-                .values(tagName, receiptID)
-                .returning(TAGS.ID)
-                .fetchOne();
-        checkState(tagsRecord != null && tagsRecord.getId() != null, "Insert failed");
-
-        return tagsRecord.getId();
-    }
-
-    public void remove(String tagName, int receiptID) {
-        dsl.deleteFrom(TAGS)
-                .where(TAGS.TAG_NAME.eq(tagName))
-                .and(TAGS.RECEIPT_ID.eq(receiptID));
-    }
-
-//    public void toggleTag(String tagName, int receiptID) {
-//        // get the list of receipts with this tag.
-//        List r = getReceiptIDsWithThisTag(tagName);
+//    public int insert(String tagName, int receiptID) {
+//        TagsRecord tagsRecord = dsl
+//                .insertInto(TAGS, TAGS.TAG_NAME, TAGS.RECEIPT_ID)
+//                .values(tagName, receiptID)
+//                .returning(TAGS.ID)
+//                .fetchOne();
+//        checkState(tagsRecord != null && tagsRecord.getId() != null, "Insert failed");
 //
-//        // if the entered receipt has already been tagged with this tag, delete the tag from this receipt.
-//        // Otherwise, we should create another entry in the tag table to associate this tag with this receipt.
-//        if (r != null && r.isEmpty()) {
-//            // create tag in database
-//        }
+//        return tagsRecord.getId();
 //    }
 
-    public List<Integer> getReceiptIDsForThisTag(String tagName) {
-        // Return a list of all receipt IDs that are labeled with this tag.
-        List<TagsRecord> T = dsl.selectFrom(TAGS)
+//    public void remove(String tagName, int receiptID) {
+//        dsl.deleteFrom(TAGS)
+//                .where(TAGS.TAG_NAME.eq(tagName))
+//                .and(TAGS.RECEIPT_ID.eq(receiptID));
+//    }
+
+    public void toggleTag(String tagName, int receiptID) {
+        // lets see if we can find any tag records with this tag.
+        TagsRecord tr = dsl
+                .selectFrom(TAGS)
+                .where(TAGS.RECEIPT_ID.eq(receiptID))
+                .and(TAGS.TAG_NAME.eq(tagName))
+                .fetchOne();
+
+        // if the entered receipt has already been tagged with this tag, delete the tag from this receipt.
+        // Otherwise, we should create another entry in the tag table to associate this tag with this receipt.
+        if (tr != null && tr.getId() != null) {
+            tr.delete();
+        } else {
+            tr = dsl
+                    .insertInto(TAGS,  TAGS.TAG_NAME, TAGS.RECEIPT_ID)
+                    .values(tagName, receiptID)
+                    .returning(TAGS.ID)
+                    .fetchOne();
+        }
+
+        checkState(tr != null && tr.getId() != null, "Insert failed");
+    }
+
+    public List<TagsRecord> getTagsRecords (String tagName) {
+        // Return a list of all tag records that are labeled with this tag.
+        return dsl.selectFrom(TAGS)
                 .where(TAGS.TAG_NAME.eq(tagName))
                 .fetch();
-        List<Integer> receiptIDs = T.stream().map(TagsRecord::getReceiptId).collect(toList());
-        return receiptIDs;
     }
 
 
