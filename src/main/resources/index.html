@@ -157,8 +157,8 @@
 
         // helper function to get all receipts and populate the table
         function populateReceipts () {
-            const api = "http://localhost:8080";
-            //const api = "http://ec2-18-221-53-154.us-east-2.compute.amazonaws.com";
+            //const api = "http://localhost:8080";
+            const api = "http://ec2-18-221-53-154.us-east-2.compute.amazonaws.com";
             $('.receipt').remove();
             $.getJSON(api + "/receipts", function(receipts) {
                 for (var i = 0; i < receipts.length; i++) {
@@ -207,8 +207,8 @@
             var data = JSON.stringify({ merchant: $('#merchant').val(), amount: $(`#amount`).val() });
 
             // post the data to the server, clear input fields, clear the receipts table, and hide the form
-            const api = "http://localhost:8080";
-            //const api = "http://ec2-18-221-53-154.us-east-2.compute.amazonaws.com";
+            //const api = "http://localhost:8080";
+            const api = "http://ec2-18-221-53-154.us-east-2.compute.amazonaws.com";
             $.ajax({
                 url: api + '/receipts',
                 type: 'post',
@@ -244,8 +244,8 @@
 
         function toggleTag(receiptId, tag) {
             // put data to the server so it can clear the tag in the database. Clear this tag from this receipt object
-            const api = "http://localhost:8080";
-            //const api = "http://ec2-18-221-53-154.us-east-2.compute.amazonaws.com";
+            //const api = "http://localhost:8080";
+            const api = "http://ec2-18-221-53-154.us-east-2.compute.amazonaws.com";
             $.ajax({
                 url: api + "/tags/" + tag,
                 type: 'put',
@@ -269,8 +269,8 @@
             var tag = (document.getElementById("tag-input-" + receiptId)).value;
 
             // put data to the server so it can clear the tag in the database. Clear this tag from this receipt object
-            const api = "http://localhost:8080";
-            //const api = "http://ec2-18-221-53-154.us-east-2.compute.amazonaws.com";
+            //const api = "http://localhost:8080";
+            const api = "http://ec2-18-221-53-154.us-east-2.compute.amazonaws.com";
 
             $.ajax({
                 url: api + "/tags/" + tag,
