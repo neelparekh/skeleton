@@ -12,6 +12,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import java.util.ArrayList;
 import java.util.List;
 
 import static java.util.stream.Collectors.toList;
@@ -56,11 +57,15 @@ public class TagsController {
     @Produces(MediaType.APPLICATION_JSON)
     public List<ReceiptResponse> getReceiptsWithTag(@PathParam("tag") String tagName) {
         // get the list of receipt objects with this tag.
-//        return tags.getReceiptIDsForThisTag(tagName);
         List<TagsRecord> TRs = tags.getTagsRecords(tagName);
         List<Integer> RIDs = TRs.stream().map(TagsRecord::getReceiptId).collect(toList());
-        List<ReceiptsRecord> receiptRecords = receipts.getMultipleReceiptsRecords(RIDs);
-        return receiptRecords.stream().map(ReceiptResponse::new).collect(toList());
+
+        List<ReceiptResponse> receiptResponses = new ArrayList<>();
+        for (ReceiptsRecord receiptRecord : receipts.getMultipleReceiptsRecords(RIDs)) {
+            receiptResponses.add(new ReceiptResponse(receiptRecord, tags.getTagsForReceipt(receiptRecord.getId())));
+        }
+
+        return receiptResponses;
 
 
 

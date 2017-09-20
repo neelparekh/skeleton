@@ -69,5 +69,13 @@ public class TagDao {
                 .fetch();
     }
 
+    public List<TagsRecord> getTagsForReceipt (int receiptID) {
+        // Return a list of all tag records that are associated with this receipt
+        return dsl.selectFrom(TAGS)
+                .where(TAGS.RECEIPT_ID.eq(receiptID))
+                .fetch();
+
+    }
+
 
 }
